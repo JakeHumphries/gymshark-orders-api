@@ -1,7 +1,8 @@
+import { IUseCase } from '../../../core/domain/usecase.interface';
 import { packSizes } from '../state';
 
 // We could break this down into smaller functions...
-class GetPackBreakdown {
+class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
   execute({ orderQuantity }: { orderQuantity: number }) {
     const packsGenerated = {};
 
