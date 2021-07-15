@@ -1,4 +1,4 @@
-import { getPackBreakdown } from '../get-pack-breakdown';
+import { getPackBreakdown } from '../get-pack-breakdown.usecase';
 
 describe('getPackBreakdown ', () => {
   it('should return the correct pack breakdown: given an order quantity', () => {
@@ -48,4 +48,8 @@ describe('getPackBreakdown ', () => {
     };
     expect(result).toStrictEqual(expectedResult);
   });
+
+  it.todo('Should throw the correct error if the quantity is not a number');
+  it.todo('Should throw the correct error if the quantity is a decimal');
+  it.todo('Should throw the correct error if the quantity is negative');
 });
