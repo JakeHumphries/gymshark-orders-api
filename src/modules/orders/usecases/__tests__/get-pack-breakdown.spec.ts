@@ -10,7 +10,7 @@ describe('getPackBreakdown ', () => {
       2000: 1,
       5000: 1
     };
-    expect(result).toBe(expectedResult);
+    expect(result).toStrictEqual(expectedResult);
   });
 
   it('should return the correct pack breakdown: when the order is lower than the smallest pack size', () => {
@@ -22,7 +22,7 @@ describe('getPackBreakdown ', () => {
       2000: 0,
       5000: 0
     };
-    expect(result).toBe(expectedResult);
+    expect(result).toStrictEqual(expectedResult);
   });
 
   it('should return no more items than neccessary (the total amount should always be the lowest possible)', () => {
@@ -34,7 +34,7 @@ describe('getPackBreakdown ', () => {
       2000: 2,
       5000: 0
     };
-    expect(result).toBe(expectedResult);
+    expect(result).toStrictEqual(expectedResult);
   });
 
   it('should return the least packs possible without returning extra items', () => {
@@ -46,6 +46,6 @@ describe('getPackBreakdown ', () => {
       2000: 0,
       5000: 1
     };
-    expect(result).toBe(expectedResult);
+    expect(result).toStrictEqual(expectedResult);
   });
 });
