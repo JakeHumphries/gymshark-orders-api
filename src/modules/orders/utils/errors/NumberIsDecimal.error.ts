@@ -1,4 +1,4 @@
-import { ValidationError } from '../../../core/errors/Validation.error';
+import { ValidationError } from '../../../../core/errors/Validation.error';
 
 class NumberIsDecimalError extends ValidationError {
   constructor(key: string) {

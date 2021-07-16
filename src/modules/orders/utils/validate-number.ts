@@ -1,6 +1,6 @@
-import NotANumberError from '../errors/NotANumber.error';
-import NumberIsDecimalError from '../errors/NumberIsDecimal.error';
-import NumberIsNegativeError from '../errors/NumberIsNegative.error';
+import NotANumberError from './errors/NotANumber.error';
+import NumberIsDecimalError from './errors/NumberIsDecimal.error';
+import NumberIsNegativeError from './errors/NumberIsNegative.error';
 
 export const validateNumber = (number: number, key: string): void => {
   if (Number.isNaN(number)) {
