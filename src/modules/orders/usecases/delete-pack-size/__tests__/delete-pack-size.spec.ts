@@ -2,7 +2,7 @@ import { packSizes } from '../../../state';
 import { deletePackSize } from '../delete-pack-size.usecase';
 import PackSizeDoesntExistError from '../errors/PackSizeDoesntExist.error';
 
-describe('getPackBreakdown ', () => {
+describe('deletePackSize ', () => {
   it('should delete a pack size from the pack sizes array if the value exists', () => {
     deletePackSize.execute(250);
     expect(packSizes).toStrictEqual([500, 1000, 5000, 2000]);
