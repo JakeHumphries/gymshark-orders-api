@@ -48,8 +48,4 @@ describe('getPackBreakdown ', () => {
     };
     expect(result).toStrictEqual(expectedResult);
   });
-
-  it.todo('Should throw the correct error if the quantity is not a number');
-  it.todo('Should throw the correct error if the quantity is a decimal');
-  it.todo('Should throw the correct error if the quantity is negative');
 });
