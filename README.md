@@ -24,7 +24,7 @@ Optional:
   code.
 - Create a UI to interact with your API
 
-## implementation
+## Implementation
 
 I have implemented a express based nodejs API written in typescript. You can pass in a orderQuantity to the express API
 and the result will be a JSON object with the pack breakdown. You can also add or delete pack sizes from the pack size
@@ -34,11 +34,11 @@ When building this app i have taken a domain driven approach.
 
 by default the pack sizes list is: `[ 500, 1000, 250, 5000, 2000 ]`
 
-## intialising the app locally
+## Intialising the app locally
 
 run `npm install` then run `npm run start`
 
-## calling endpoints
+## Calling endpoints
 
 to get a pack breakdown you can send a GET request to `http://localhost:3000/get-pack-breakdown/{orderquantity}`
 
@@ -50,6 +50,6 @@ to delete a pack size to the list of pack sizes you can send a POST request to `
 
 example body: `{"packSize": "100"}`
 
-## running the test
+## Running the test
 
 run `npm run test`
