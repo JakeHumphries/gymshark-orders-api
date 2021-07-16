@@ -9,4 +9,6 @@ ordersRouter.get('/get-pack-breakdown/:orderquantity', (req, res, next) =>
 
 ordersRouter.post('/add-pack-size', (req, res, next) => ordersController.addPackSize(req, res, next));
 
+ordersRouter.post('/delete-pack-size', (req, res, next) => ordersController.deletePackSize(req, res, next));
+
 export default ordersRouter;
