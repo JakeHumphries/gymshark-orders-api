@@ -38,6 +38,8 @@ by default the pack sizes list is: `[ 500, 1000, 250, 5000, 2000 ]`
 
 run `npm install` then run `npm run start`
 
+if you wish you can also run `docker-compose up` to initialize a dockerized version of the app.
+
 ## Calling endpoints
 
 to get a pack breakdown you can send a GET request to `http://localhost:3000/get-pack-breakdown/{orderquantity}`
