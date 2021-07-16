@@ -1,23 +1,11 @@
 import { IUseCase } from '../../../../core/domain/usecase.interface';
 import { packSizes } from '../../state';
-import QuantityIsDecimalError from './errors/QuantityIsDecimal.error';
-import QuantityIsNegativeError from './errors/QuantityIsNegative.error';
-import QuantityIsNotANumberError from './errors/QuantityIsNotANumber.error';
+import { validateNumber } from '../../utils/validate-number';
 
 // We could break this down into smaller functions...
 class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
   execute({ orderQuantity }: { orderQuantity: number }) {
-    if (Number.isNaN(orderQuantity)) {
-      throw new QuantityIsNotANumberError();
-    }
-
-    if (orderQuantity % 1 !== 0) {
-      throw new QuantityIsDecimalError();
-    }
-
-    if (orderQuantity < 0) {
-      throw new QuantityIsNegativeError();
-    }
+    validateNumber(orderQuantity, 'orderQuantity');
 
     const packsGenerated = {};
 
