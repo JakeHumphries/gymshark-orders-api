@@ -6,6 +6,7 @@ const main = async () => {
   const app = express();
   const port = process.env.PORT || 3000;
 
+  app.use(express.json());
   app.use('/', ordersRouter);
   app.use(errorMiddleware);
   app.listen(port, () => {
