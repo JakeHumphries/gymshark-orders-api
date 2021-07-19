@@ -38,6 +38,18 @@ describe('getPackBreakdown ', () => {
   });
 
   it('should return the least packs possible without returning extra items', () => {
+    const result = getPackBreakdown.execute({ orderQuantity: 1999 });
+    const expectedResult = {
+      250: 0,
+      500: 0,
+      1000: 2,
+      2000: 0,
+      5000: 0
+    };
+    expect(result).toStrictEqual(expectedResult);
+  });
+
+  it('should return the least packs possible without returning extra items when the total amount === the max pack size', () => {
     const result = getPackBreakdown.execute({ orderQuantity: 4999 });
     const expectedResult = {
       250: 0,

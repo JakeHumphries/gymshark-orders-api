@@ -5,6 +5,7 @@ import PackSizeDoesntExistError from './errors/PackSizeDoesntExist.error';
 
 class DeletePackSize implements IUseCase<number> {
   execute(packSize: number) {
+    console.log(packSize);
     validateNumber(packSize, 'packSize');
 
     if (!packSizes.includes(packSize)) {

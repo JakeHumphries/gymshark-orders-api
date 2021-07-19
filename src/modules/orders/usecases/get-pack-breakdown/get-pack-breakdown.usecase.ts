@@ -56,6 +56,19 @@ class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
       }
       return true;
     });
+
+    // if any of the pack sizes * the pack quantity === another pack size then update it
+    const packSizeNames = Object.keys(packsGenerated);
+    const packSizeEntries = Object.entries(packsGenerated);
+    packSizeEntries.map((packSizeEntry) => {
+      const total = (Number(packSizeEntry[0]) * Number(packSizeEntry[1])).toString();
+      if (packSizeNames.includes(total) && packSizeEntry[0] !== total) {
+        packsGenerated[packSizeEntry[0]] = 0;
+        packsGenerated[total] += 1;
+      }
+      return false;
+    });
+
     return packsGenerated;
   }
 }
