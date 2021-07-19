@@ -1,13 +1,45 @@
+/* eslint-disable no-param-reassign */
 import { IUseCase } from '../../../../core/domain/usecase.interface';
 import { packSizes } from '../../state';
 import { validateNumber } from '../../utils/validate-number';
 
 // We could break this down into smaller functions...
 class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
+  checkTotalPacksPerPackSize(packsGenerated, packSizeNames) {
+    // if any of the pack sizes * the pack quantity === another pack size then update it
+    const packSizeEntries = Object.entries(packsGenerated);
+    packSizeEntries.map((packSizeEntry) => {
+      const total = (Number(packSizeEntry[0]) * Number(packSizeEntry[1])).toString();
+      if (packSizeNames.includes(total) && packSizeEntry[0] !== total) {
+        packsGenerated[packSizeEntry[0]] = 0;
+        packsGenerated[total] += 1;
+      }
+      return false;
+    });
+    return packsGenerated;
+  }
+
+  checkTotalPacks(packsGenerated, packSizeNames) {
+    // If total packs generated === another pack size then clear all packs sizes and update the 1 that it equals
+    const totalItems = Object.entries(packsGenerated).reduce((RunningItemTotal, currentPackGenerated) => {
+      const amount = currentPackGenerated[1] as number;
+      return RunningItemTotal + Number(currentPackGenerated[0]) * amount;
+    }, 0);
+
+    if (packSizeNames.includes(totalItems.toString())) {
+      Object.keys(packsGenerated).forEach((pack) => {
+        packsGenerated[pack] = 0;
+      });
+      packsGenerated[totalItems.toString()] = 1;
+    }
+
+    return packsGenerated;
+  }
+
   execute({ orderQuantity }: { orderQuantity: number }) {
     validateNumber(orderQuantity, 'orderQuantity');
 
-    const packsGenerated = {};
+    let packsGenerated = {};
 
     let overallOrdersRemaining = orderQuantity;
 
@@ -45,30 +77,11 @@ class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
       return true;
     });
 
-    // if any of the pack sizes * the pack quantity === another pack size then update it
     const packSizeNames = Object.keys(packsGenerated);
-    const packSizeEntries = Object.entries(packsGenerated);
-    packSizeEntries.map((packSizeEntry) => {
-      const total = (Number(packSizeEntry[0]) * Number(packSizeEntry[1])).toString();
-      if (packSizeNames.includes(total) && packSizeEntry[0] !== total) {
-        packsGenerated[packSizeEntry[0]] = 0;
-        packsGenerated[total] += 1;
-      }
-      return false;
-    });
 
-    // If total packs generated === another pack size then clear all packs sizes and update the 1 that it equals
-    const totalItems = Object.entries(packsGenerated).reduce((RunningItemTotal, currentPackGenerated) => {
-      const amount = currentPackGenerated[1] as number;
-      return RunningItemTotal + Number(currentPackGenerated[0]) * amount;
-    }, 0);
+    packsGenerated = this.checkTotalPacksPerPackSize(packsGenerated, packSizeNames);
 
-    if (packSizeNames.includes(totalItems.toString())) {
-      Object.keys(packsGenerated).forEach((pack) => {
-        packsGenerated[pack] = 0;
-      });
-      packsGenerated[totalItems.toString()] = 1;
-    }
+    packsGenerated = this.checkTotalPacks(packsGenerated, packSizeNames);
 
     return packsGenerated;
   }
