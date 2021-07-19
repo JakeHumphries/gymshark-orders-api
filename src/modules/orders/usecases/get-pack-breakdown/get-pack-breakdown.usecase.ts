@@ -42,18 +42,6 @@ class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
 
       overallOrdersRemaining -= currentPackSize * packSizeQuantity;
 
-      // if packs generated so far equals the highest pack size then clear and add the highest pack size
-      const totalItems = Object.entries(packsGenerated).reduce((RunningItemTotal, currentPackGenerated) => {
-        const amount = currentPackGenerated[1] as number;
-        return RunningItemTotal + Number(currentPackGenerated[0]) * amount;
-      }, 0);
-
-      if (totalItems === packSizesArr[0]) {
-        Object.keys(packsGenerated).forEach((pack) => {
-          packsGenerated[pack] = 0;
-        });
-        packsGenerated[packSizesArr[0]] = 1;
-      }
       return true;
     });
 
@@ -68,6 +56,19 @@ class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
       }
       return false;
     });
+
+    // If total packs generated === another pack size then clear all packs sizes and update the 1 that it equals
+    const totalItems = Object.entries(packsGenerated).reduce((RunningItemTotal, currentPackGenerated) => {
+      const amount = currentPackGenerated[1] as number;
+      return RunningItemTotal + Number(currentPackGenerated[0]) * amount;
+    }, 0);
+
+    if (packSizeNames.includes(totalItems.toString())) {
+      Object.keys(packsGenerated).forEach((pack) => {
+        packsGenerated[pack] = 0;
+      });
+      packsGenerated[totalItems.toString()] = 1;
+    }
 
     return packsGenerated;
   }

@@ -42,8 +42,8 @@ describe('getPackBreakdown ', () => {
     const expectedResult = {
       250: 0,
       500: 0,
-      1000: 2,
-      2000: 0,
+      1000: 0,
+      2000: 1,
       5000: 0
     };
     expect(result).toStrictEqual(expectedResult);
