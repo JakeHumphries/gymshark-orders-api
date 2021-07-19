@@ -17,7 +17,6 @@ class AddPackSize implements IUseCase<number> {
     }
 
     packSizes.push(packSize);
-    console.log(packSizes);
   }
 }
 

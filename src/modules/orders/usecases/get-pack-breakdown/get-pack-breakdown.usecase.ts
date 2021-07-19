@@ -60,10 +60,14 @@ class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
         packSizeQuantity = Math.ceil(overallOrdersRemaining / currentPackSize);
 
         // if current total amount is less than the next pack size up then update current otherwise update next pack up
-        if (packSizeQuantity * currentPackSize < previousPackSize) {
-          packsGenerated[currentPackSize] += packSizeQuantity;
+        if (packSizesArr.length > 1) {
+          if (packSizeQuantity * currentPackSize < previousPackSize) {
+            packsGenerated[currentPackSize] += packSizeQuantity;
+          } else {
+            packsGenerated[previousPackSize] += 1;
+          }
         } else {
-          packsGenerated[previousPackSize] += 1;
+          packsGenerated[currentPackSize] += packSizeQuantity;
         }
       }
       // if not lowest pack size then add pack normally
