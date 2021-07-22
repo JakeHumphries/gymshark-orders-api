@@ -5,6 +5,21 @@ import { validateNumber } from '../../utils/validate-number';
 
 // We could break this down into smaller functions...
 class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
+  checkTotalPacksPerPackSize(packsGenerated, packSizeNames) {
+    // if any of the pack sizes * the pack quantity === another pack size then update it
+    const packSizeEntries = Object.entries(packsGenerated);
+    packSizeEntries.map((packSizeEntry) => {
+      const total = (Number(packSizeEntry[0]) * Number(packSizeEntry[1])).toString();
+      if (packSizeNames.includes(total) && packSizeEntry[0] !== total) {
+        packsGenerated[packSizeEntry[0]] = 0;
+        packsGenerated[total] += 1;
+        this.checkTotalPacksPerPackSize(packsGenerated, packSizeNames);
+      }
+      return false;
+    });
+    return packsGenerated;
+  }
+
   checkForMoreEfficientPacks(packsGenerated, packSizeNames) {
     // if total packs generated can be divided by a higher pack number then use that one
     const packInformation = Object.entries(packsGenerated).reduce(
@@ -87,6 +102,8 @@ class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
     });
 
     const packSizeNames = Object.keys(packsGenerated);
+
+    packsGenerated = this.checkTotalPacksPerPackSize(packsGenerated, packSizeNames);
 
     packsGenerated = this.checkForMoreEfficientPacks(packsGenerated, packSizeNames);
 
