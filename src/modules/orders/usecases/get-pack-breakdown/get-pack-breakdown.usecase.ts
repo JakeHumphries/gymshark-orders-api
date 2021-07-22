@@ -5,32 +5,37 @@ import { validateNumber } from '../../utils/validate-number';
 
 // We could break this down into smaller functions...
 class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
-  checkTotalPacksPerPackSize(packsGenerated, packSizeNames) {
-    // if any of the pack sizes * the pack quantity === another pack size then update it
-    const packSizeEntries = Object.entries(packsGenerated);
-    packSizeEntries.map((packSizeEntry) => {
-      const total = (Number(packSizeEntry[0]) * Number(packSizeEntry[1])).toString();
-      if (packSizeNames.includes(total) && packSizeEntry[0] !== total) {
-        packsGenerated[packSizeEntry[0]] = 0;
-        packsGenerated[total] += 1;
+  checkForMoreEfficientPacks(packsGenerated, packSizeNames) {
+    // if total packs generated can be divided by a higher pack number then use that one
+    const packInformation = Object.entries(packsGenerated).reduce(
+      (endResult, currentPackGenerated) => {
+        const amount = currentPackGenerated[1] as number;
+        endResult.totalPacks += amount;
+        return {
+          totalItems: endResult.totalItems + Number(currentPackGenerated[0]) * amount,
+          totalPacks: endResult.totalPacks
+        };
+      },
+      { totalItems: 0, totalPacks: 0 }
+    );
+
+    let mostEfficientPackSize = '';
+
+    packSizeNames.map((packSize) => {
+      const dividedTotal = packInformation.totalItems / Number(packSize);
+      if (Number.isInteger(dividedTotal) && dividedTotal < packInformation.totalPacks) {
+        packInformation.totalPacks = dividedTotal;
+        mostEfficientPackSize = packSize;
       }
-      return false;
+      return true;
     });
-    return packsGenerated;
-  }
 
-  checkTotalPacks(packsGenerated, packSizeNames) {
-    // If total packs generated === another pack size then clear all packs sizes and update the 1 that it equals
-    const totalItems = Object.entries(packsGenerated).reduce((RunningItemTotal, currentPackGenerated) => {
-      const amount = currentPackGenerated[1] as number;
-      return RunningItemTotal + Number(currentPackGenerated[0]) * amount;
-    }, 0);
-
-    if (packSizeNames.includes(totalItems.toString())) {
+    if (mostEfficientPackSize !== '') {
       Object.keys(packsGenerated).forEach((pack) => {
         packsGenerated[pack] = 0;
       });
-      packsGenerated[totalItems.toString()] = 1;
+
+      packsGenerated[mostEfficientPackSize] = packInformation.totalPacks;
     }
 
     return packsGenerated;
@@ -83,9 +88,7 @@ class GetPackBreakdown implements IUseCase<{ orderQuantity: number }> {
 
     const packSizeNames = Object.keys(packsGenerated);
 
-    packsGenerated = this.checkTotalPacksPerPackSize(packsGenerated, packSizeNames);
-
-    packsGenerated = this.checkTotalPacks(packsGenerated, packSizeNames);
+    packsGenerated = this.checkForMoreEfficientPacks(packsGenerated, packSizeNames);
 
     return packsGenerated;
   }
